@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>signup</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <h1>ログイン</h1>
+  <form [formGroup]="loginForm" (ngSubmit)="signIn()">
+    <label for="email">Email</label>
+    <input type="email" class="input" formControlName="email" required />
+    <label for="password">Password</label>
+    <input type="password" class="input" formControlName="password" required />
+    <button type="submit" class="button">ログイン</button>
+  </form>
+  <button (click)="signInWithGoogle()">
+    <i class="fa fa-google"></i>Googleログイン
+  </button>
+</ion-content>
