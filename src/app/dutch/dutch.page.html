@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-icon name="close" (click)="dismiss()"></ion-icon>
+    <ion-title>Dutch</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-content fullscreen>
+    <ion-list>
+      <ion-list-header>
+        {{ title }}
+      </ion-list-header>
+
+      <ion-item>
+        <ion-label position="floating">請求合計金額</ion-label>
+        <ion-input type="text" [(ngModel)]="price"></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <ion-list>
+      <ion-list-header>
+        請求先
+      </ion-list-header>
+
+      <ion-item *ngFor="let member of dutchMembers">
+        <ion-avatar slot="start">
+          <img
+            src="http://sunamizu-kuzira.com/diary/wp-content/uploads/2017/05/lyhily.jpg"
+          />
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ member.displayName }}</h2>
+          <h3>{{ calcBillingAmount() }}</h3>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-button
+      color="primary"
+      (click)="sendBilling()"
+      [disabled]="!billingAmount"
+      >請求する</ion-button
+    >
+  </ion-content>
+</ion-content>

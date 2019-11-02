@@ -9,7 +9,9 @@ const routes: Routes = [
     loadChildren: "./tabs/tabs.module#TabsPageModule",
     canActivate: [AuthGuard]
   },
-  { path: "login", loadChildren: "./login/login.module#LoginPageModule" }
+  { path: "login", loadChildren: "./login/login.module#LoginPageModule" },
+  { path: 'dutch', loadChildren: './dutch/dutch.module#DutchPageModule' },
+  { path: 'tutorial', loadChildren: './tutorial/tutorial.module#TutorialPageModule' }
 ];
 @NgModule({
   imports: [

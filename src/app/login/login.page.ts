@@ -24,23 +24,23 @@ export class LoginPage implements OnInit {
     });
   }
 
-  signIn() {
-    const email = this.loginForm.get("email").value;
-    const password = this.loginForm.get("password").value;
-    this.auth
-      .login(email, password)
-      .then(() => {
-        this.router.navigate(["tabs"]);
-      })
-      .catch((error: any) => {
-        if (error && error.code === "auth/user-not-found") {
-          this.auth.siginUp(email, password).then(() => {
-            console.log("CREATE");
-            this.router.navigate(["tabs"]);
-          });
-        }
-      });
-  }
+  // signIn() {
+  //   const email = this.loginForm.get("email").value;
+  //   const password = this.loginForm.get("password").value;
+  //   this.auth
+  //     .login(email, password)
+  //     .then(() => {
+  //       this.router.navigate(["tabs"]);
+  //     })
+  //     .catch((error: any) => {
+  //       if (error && error.code === "auth/user-not-found") {
+  //         this.auth.siginUp(email, password).then(() => {
+  //           console.log("CREATE");
+  //           this.router.navigate(["tabs"]);
+  //         });
+  //       }
+  //     });
+  // }
 
   signInWithGoogle() {
     this.auth.signinWithGoogle().then(() => {

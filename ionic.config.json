@@ -1,5 +1,7 @@
 {
   "name": "highball-wallet",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

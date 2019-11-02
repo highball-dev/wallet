@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 import { AngularFireAuth } from "@angular/fire/auth";
 import {
   AngularFirestore,
-  AngularFirestoreDocument
+  AngularFirestoreDocument,
+  AngularFirestoreCollection
 } from "@angular/fire/firestore";
 
 import { Router } from "@angular/router";
@@ -18,6 +19,7 @@ const TOKEN_KEY = "auth-token";
 export class AuthService {
   user: Observable<User | null> = this.afAuth.user;
   authenticationState = new BehaviorSubject(false);
+  private me: User;
 
   constructor(
     private router: Router,
@@ -31,45 +33,54 @@ export class AuthService {
     return this.updateUserDataWithGoogle(credential.user);
   }
 
+  public getMe(): User {
+    return this.me;
+  }
+
   private updateUserDataWithGoogle(user: any) {
     // Sets user data to firestore on login
     const userRef: AngularFirestoreDocument<User> = this.afStore.doc(
       `users/${user.uid}`
     );
 
-    const data = {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL
-    };
-
-    return userRef.set(data, { merge: true });
+    userRef.get().subscribe(afUser => {
+      const data = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL
+      };
+      this.me = data;
+      if (!afUser.exists) {
+        localStorage.setItem("firstlogin", "true");
+        return userRef.set(data, { merge: true });
+      }
+    });
   }
 
-  siginUp(email: string, password: string) {
-    return this.afAuth.auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((user: any) => {
-        console.log(user);
-        this.updateUserData(user);
-        return user;
-      })
-      .catch(err => console.log(err));
-  }
+  // siginUp(email: string, password: string) {
+  //   return this.afAuth.auth
+  //     .createUserWithEmailAndPassword(email, password)
+  //     .then((user: any) => {
+  //       console.log(user);
+  //       this.updateUserData(user);
+  //       return user;
+  //     })
+  //     .catch(err => console.log(err));
+  // }
 
-  login(email: string, password: string): Promise<any> {
-    return this.afAuth.auth
-      .signInWithEmailAndPassword(email, password)
-      .then((user: any) => {
-        console.log(user);
-        this.updateUserData(user);
-        return user;
-      })
-      .catch(err => {
-        return err;
-      });
-  }
+  // login(email: string, password: string): Promise<any> {
+  //   return this.afAuth.auth
+  //     .signInWithEmailAndPassword(email, password)
+  //     .then((user: any) => {
+  //       console.log(user);
+  //       this.updateUserData(user);
+  //       return user;
+  //     })
+  //     .catch(err => {
+  //       return err;
+  //     });
+  // }
 
   logout() {
     this.afAuth.auth.signOut().then(() => {
@@ -77,18 +88,40 @@ export class AuthService {
     });
   }
 
-  private updateUserData(param: any) {
-    const user: User = param.user;
-    const docUser: AngularFirestoreDocument<User> = this.afStore.doc(
-      `users/${user.uid}`
+  getAfUser(): Observable<any> {
+    return this.afAuth.user;
+  }
+
+  getUser(uid: string): Observable<User> {
+    const userRef: AngularFirestoreDocument<User> = this.afStore.doc(
+      `users/${uid}`
     );
-    const data: User = {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName || "",
-      photoURL: user.photoURL || "",
-      profile: user.profile || ""
-    };
-    return docUser.set(data);
+    return userRef.valueChanges();
+  }
+
+  getGroups(): Observable<any> {
+    const groupRefs: AngularFirestoreCollection<any> = this.afStore.collection(
+      `groups`
+    );
+
+    return groupRefs.valueChanges();
+  }
+
+  public updateUserData(param: any): Subscription {
+    console.log(param);
+    const userRef: AngularFirestoreDocument<User> = this.afStore.doc(
+      `users/${param.uid}`
+    );
+
+    return userRef.valueChanges().subscribe(baseUserData => {
+      const data: User = {
+        uid: baseUserData.uid,
+        email: baseUserData.email,
+        displayName: param.displayName || baseUserData.displayName,
+        photoURL: param.photoURL || baseUserData.photoURL,
+        group: param.group || baseUserData.group
+      };
+      return userRef.set(data);
+    });
   }
 }

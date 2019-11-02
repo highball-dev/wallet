@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouteReuseStrategy } from "@angular/router";
+import { FormsModule } from "@angular/forms";
 
 import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
@@ -12,17 +13,25 @@ import { AngularFireModule } from "@angular/fire";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { environment } from "src/environments/environment.prod";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
+import { AngularFireDatabaseModule } from "@angular/fire/database";
+import { AngularFireStorageModule } from "@angular/fire/storage";
+import { Camera } from "@ionic-native/camera/ngx";
+import { DutchPage } from "./dutch/dutch.page";
+import { TutorialPage } from "./tutorial/tutorial.page";
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent, DutchPage, TutorialPage],
+  entryComponents: [DutchPage, TutorialPage],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
     AngularFireModule.initializeApp(environment.config),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    AppRoutingModule
+    AngularFireDatabaseModule,
+    AngularFireStorageModule,
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [
     StatusBar,
@@ -30,7 +39,7 @@ import { AngularFirestoreModule } from "@angular/fire/firestore";
     AngularFireModule,
     AngularFireAuthModule,
     AngularFirestoreModule,
-
+    Camera,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>tutorial</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-list-header>初期設定</ion-list-header>
+    <ion-item>
+      <ion-label>グループ</ion-label>
+      <ion-select *ngFor="let group of groups" [(ngModel)]="selectedGroup">
+        <ion-select-option [value]="group.name">{{
+          group.name
+        }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>表示名</ion-label>
+      <ion-input type="text" [(ngModel)]="displayName"></ion-input>
+    </ion-item>
+  </ion-list>
+  <ion-button color="primary" (click)="submit()">CREATE</ion-button>
+</ion-content>

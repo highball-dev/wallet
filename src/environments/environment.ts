@@ -1,12 +1,12 @@
 export const environment = {
   production: false,
   config: {
-    apiKey: "AIzaSyAzKBk9s29zXy-Zbn6xSgQ85XuBBdhJ6Dg",
-    authDomain: "fapy-c98eb.firebaseapp.com",
-    databaseURL: "https://fapy-c98eb.firebaseio.com",
-    projectId: "fapy-c98eb",
-    storageBucket: "",
-    messagingSenderId: "157833380990",
-    appId: "1:157833380990:web:bd85100963f80734"
+    apiKey: "AIzaSyDrO4C4oNs3EgLMPzYmZiyG1fKXSRw45nY",
+    authDomain: "highball-wallet.firebaseapp.com",
+    databaseURL: "https://highball-wallet.firebaseio.com",
+    projectId: "highball-wallet",
+    storageBucket: "highball-wallet.appspot.com",
+    messagingSenderId: "400387589581",
+    appId: "1:400387589581:web:3bff7d253cdf2b53c3f084"
   }
 };
