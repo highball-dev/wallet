@@ -5,5 +5,20 @@
 </ion-header>
 
 <ion-content>
-
+  <ion-list>
+    <ion-list-header>
+      Recent Conversations
+    </ion-list-header>
+    <div *ngFor="let billing of billings">
+      <ion-item>
+        <ion-avatar slot="start">
+          <img [src]="getImgUrl(billing.sourceID) | async" />
+        </ion-avatar>
+        <ion-label>
+          <h3>請求額：{{ billing.price }}</h3>
+          <p>請求元：{{ getSourceName(billing.sourceID) | async }}</p>
+        </ion-label>
+      </ion-item>
+    </div>
+  </ion-list>
 </ion-content>

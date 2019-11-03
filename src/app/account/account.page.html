@@ -4,24 +4,24 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Home
+      RECEIPT
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-card class="welcome-card">
+  <!-- <ion-card class="welcome-card">
     <ion-img src="https://pbs.twimg.com/media/DMTpjUxUMAAeA9J.jpg"></ion-img>
     <ion-card-header>
       <ion-card-title>HIGHBALL WALLET</ion-card-title>
     </ion-card-header>
-  </ion-card>
+  </ion-card> -->
   <ion-list>
     <ion-list-header>
       <ion-label>Register my RECEIPT</ion-label>
     </ion-list-header>
     <ion-item>
-      <ion-label position="floating">Title</ion-label>
+      <ion-label position="floating">Shop</ion-label>
       <ion-input type="text" [(ngModel)]="name"></ion-input>
     </ion-item>
     <ion-item>
@@ -38,7 +38,11 @@
         (change)="changeFile($event)"
       ></ion-input>
     </ion-item>
-    <ion-button color="primary" (click)="addReceipt()" [disabled]="!ready"
+    <ion-button
+      class="ion-padding"
+      color="primary"
+      (click)="addReceipt()"
+      [disabled]="!ready"
       >CREATE</ion-button
     >
   </ion-list>

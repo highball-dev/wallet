@@ -43,6 +43,7 @@ export class LoginPage implements OnInit {
   // }
 
   signInWithGoogle() {
+    this;
     this.auth.signinWithGoogle().then(() => {
       this.router.navigate(["tabs"]);
     });

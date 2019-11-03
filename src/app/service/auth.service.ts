@@ -10,6 +10,7 @@ import {
 import { Router } from "@angular/router";
 import { User } from "../model/user";
 import { auth } from "firebase";
+import { LoadingService } from "./loading.service";
 
 const TOKEN_KEY = "auth-token";
 
@@ -24,13 +25,16 @@ export class AuthService {
   constructor(
     private router: Router,
     private afAuth: AngularFireAuth,
+    private loadingSvc: LoadingService,
     private afStore: AngularFirestore
   ) {}
 
   async signinWithGoogle() {
+    this.loadingSvc.present();
     const provider = new auth.GoogleAuthProvider();
     const credential = await this.afAuth.auth.signInWithPopup(provider);
-    return this.updateUserDataWithGoogle(credential.user);
+    this.updateUserDataWithGoogle(credential.user);
+    this.loadingSvc.dismiss();
   }
 
   public getMe(): User {
@@ -105,6 +109,13 @@ export class AuthService {
     );
 
     return groupRefs.valueChanges();
+  }
+
+  getGroupUser(): Observable<any> {
+    const groupUser: AngularFirestoreCollection<User> = this.afStore.collection(
+      "users/"
+    );
+    return groupUser.valueChanges();
   }
 
   public updateUserData(param: any): Subscription {

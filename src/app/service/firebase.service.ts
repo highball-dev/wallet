@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AngularFireDatabase } from "@angular/fire/database";
+import { AngularFireDatabase, AngularFireObject } from "@angular/fire/database";
 import {
   AngularFireStorage,
   AngularFireUploadTask,
@@ -7,6 +7,7 @@ import {
 } from "@angular/fire/storage";
 import { Observable } from "rxjs";
 import { Status } from "../enum/status.enum";
+import { User } from "../model/user";
 
 export interface Receipt {
   id: string;
@@ -34,8 +35,14 @@ export class FirebaseService {
     public angularfireStorage: AngularFireStorage
   ) {}
 
-  public fetchDatabase(): Observable<any> {
-    return this.angularfireDatabase.list("receipt").valueChanges();
+  public fetchDatabase(me: User): Observable<any> {
+    console.log("billing/" + me.group + "/" + me.uid);
+    return this.angularfireDatabase
+      .list("billing/" + me.group + "/" + me.uid)
+      .valueChanges();
+    // return this.angularfireDatabase
+    //   .list("billing/" + me.group + "/" + 1)
+    //   .valueChanges();
   }
 
   public createPushId(): string {
@@ -69,6 +76,15 @@ export class FirebaseService {
   //   const itemRef = this.angularfireDatabase.object("receipt/" + Receipt.id);
   //   return itemRef.update(Receipt);
   // }
+
+  public getReceipt(me: User, receiptID: string): Observable<Receipt> {
+    const obj: AngularFireObject<Receipt> = this.angularfireDatabase.object(
+      "receipt/" + me.group + "/" + me.uid + "/" + receiptID
+    );
+    // return this.angularfireDatabase
+    //   .object("receipt/" + me.group + "/" + me.uid + "/" + receiptID)
+    return obj.valueChanges();
+  }
 
   public uploadImage(imageBlob: Blob, path: string): AngularFireUploadTask {
     return this.angularfireStorage.ref(path).put(imageBlob);

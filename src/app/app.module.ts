@@ -16,12 +16,11 @@ import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { AngularFireStorageModule } from "@angular/fire/storage";
 import { Camera } from "@ionic-native/camera/ngx";
-import { DutchPage } from "./dutch/dutch.page";
-import { TutorialPage } from "./tutorial/tutorial.page";
+// import { DutchPage } from "./dutch/dutch.page";
+// import { TutorialPage } from "./tutorial/tutorial.page";
 
 @NgModule({
-  declarations: [AppComponent, DutchPage, TutorialPage],
-  entryComponents: [DutchPage, TutorialPage],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
