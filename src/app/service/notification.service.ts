@@ -19,22 +19,13 @@ export class NotificationService {
       })
     };
     let seq = this.http.post(
-      "https://hooks.slack.com/services/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",
+      "https://hooks.slack.com/services/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",
       {
-        channel: "a_and_g",
         // FIXME:
         text:
           "<@" + sourceSlackID + "> " + fromName + "が支払いを完了しました。"
       },
       options
-    );
-    seq.subscribe(
-      data => {
-        console.log(data);
-      },
-      (httpError: HttpErrorResponse) => {
-        console.log(httpError);
-      }
     );
     return seq;
   }

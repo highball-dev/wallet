@@ -57,7 +57,8 @@ export class AccountPage {
           email: user.email,
           displayName: user.displayName,
           photoURL: user.photoURL,
-          group: user.group
+          group: user.group,
+          slackID: user.slackID
         };
         if (!this.me.group) {
           this.openGroupAlert();

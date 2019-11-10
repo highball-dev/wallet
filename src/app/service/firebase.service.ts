@@ -1,5 +1,9 @@
 import { Injectable } from "@angular/core";
-import { AngularFireDatabase, AngularFireObject } from "@angular/fire/database";
+import {
+  AngularFireDatabase,
+  AngularFireObject,
+  AngularFireList
+} from "@angular/fire/database";
 import {
   AngularFireStorage,
   AngularFireUploadTask,
@@ -9,16 +13,17 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Status } from "../enum/status.enum";
 import { User } from "../model/user";
+import { Receipt } from "../model/receipt";
 
-export interface Receipt {
-  id: string;
-  name: string;
-  description: string;
-  sourceID: string;
-  sourceSlackID: string;
-  status: Status;
-  image?: string;
-}
+// export interface Receipt {
+//   id: string;
+//   name: string;
+//   description: string;
+//   sourceID: string;
+//   sourceSlackID: string;
+//   status: Status;
+//   image?: string;
+// }
 
 export interface Billing {
   id: string;
@@ -39,10 +44,9 @@ export class FirebaseService {
     public angularfireStorage: AngularFireStorage
   ) {}
 
-  public fetchDatabase(me: User): Observable<any> {
-    console.log("billing/" + me.group + "/" + me.uid);
+  public fetchDatabase(group: string): Observable<any> {
     return this.angularfireDatabase
-      .list("billing/" + me.group + "/" + me.uid)
+      .list("billing/" + group + "/")
       .valueChanges();
     // return this.angularfireDatabase
     //   .list("billing/" + me.group + "/" + 1)
@@ -85,13 +89,21 @@ export class FirebaseService {
   //   return itemRef.update(Receipt);
   // }
 
-  public getReceipt(me: User, receiptID: string): Observable<Receipt> {
+  public getReceipt(group: string, receiptID: string): Observable<Receipt> {
     const obj: AngularFireObject<Receipt> = this.angularfireDatabase.object(
-      "receipt/" + me.group + "/" + me.uid + "/" + receiptID
+      "receipt/" + group + "/" + receiptID
     );
+    console.log("receipt/" + group + "/" + receiptID);
     // return this.angularfireDatabase
     //   .object("receipt/" + me.group + "/" + me.uid + "/" + receiptID)
     return obj.valueChanges();
+  }
+
+  public getBillings(group: string, sourceID: string): Observable<any> {
+    console.log("billing/" + group + "/" + sourceID);
+    return this.angularfireDatabase
+      .list("billing/" + group + "/" + sourceID)
+      .valueChanges();
   }
 
   public uploadImage(imageBlob: Blob, path: string): AngularFireUploadTask {
@@ -105,14 +117,14 @@ export class FirebaseService {
   public createBilling(
     receiptID: string,
     group: string,
-    addressID: string,
     sourceID: string,
+    addressID: string,
     sourceSlackID: string,
     price: number
   ): Promise<any> {
     const billingID: string = this.angularfireDatabase.createPushId();
     const itemRef = this.angularfireDatabase.object(
-      "billing/" + group + "/" + addressID + "/" + billingID
+      "billing/" + group + "/" + receiptID + "/" + billingID
     );
     const targetObject: Billing = {
       id: billingID,

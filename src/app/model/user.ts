@@ -1,4 +1,4 @@
-export interface User {
+export class User {
   uid: string;
   email: string;
   displayName?: string;
@@ -6,4 +6,10 @@ export interface User {
   profile?: string;
   group?: string;
   slackID?: string;
+
+  constructor(fields: any) {
+    for (const f in fields) {
+      this[f] = fields[f];
+    }
+  }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FirebaseService, Receipt } from "../service/firebase.service";
+import { FirebaseService } from "../service/firebase.service";
 import { User } from "../model/user";
 import { AuthService } from "../service/auth.service";
 import { Subject, Subscription } from "rxjs";
@@ -7,6 +7,8 @@ import { Status } from "../enum/status.enum";
 import { LoadingService } from "../service/loading.service";
 import { UserService } from "../service/user.service";
 import { NotificationService } from "../service/notification.service";
+import { Router } from "@angular/router";
+import { Receipt } from "../model/receipt";
 
 @Component({
   selector: "app-collection",
@@ -27,6 +29,7 @@ export class CollectionPage implements OnInit {
   constructor(
     public firebase: FirebaseService,
     public auth: AuthService,
+    public router: Router,
     public loadingSvc: LoadingService,
     public notificationSvc: NotificationService,
     public userSvc: UserService
@@ -45,15 +48,10 @@ export class CollectionPage implements OnInit {
             email: user.email,
             displayName: user.displayName,
             photoURL: user.photoURL,
+            slackID: user.slackID,
             group: user.group
           };
-          this.dbSubscribe = this.firebase
-            .fetchDatabase(this.me)
-            .subscribe(d => {
-              this.billings = d;
-              console.log(this.billings);
-            });
-          // userSubscribe.unsubscribe();
+          this.fetchCollection();
         });
     });
   }
@@ -61,6 +59,20 @@ export class CollectionPage implements OnInit {
   ngOnDestroy(): void {
     this.meSubscribe.unsubscribe();
     this.dbSubscribe.unsubscribe();
+  }
+
+  fetchCollection(): void {
+    this.dbSubscribe = this.firebase
+      .fetchDatabase(this.me.group)
+      .subscribe(receipts => {
+        receipts.forEach(billings => {
+          for (let key in billings) {
+            if (billings[key].addressID == this.me.uid) {
+              this.billings.push(billings[key]);
+            }
+          }
+        });
+      });
   }
 
   getSourceName(sourceID: string): Subject<string> {
@@ -78,29 +90,40 @@ export class CollectionPage implements OnInit {
   }
 
   getReceiptName(receiptID: string): Subject<Receipt> {
-    this.firebase.getReceipt(this.me, receiptID).subscribe(r => {
+    this.firebase.getReceipt(this.me.group, receiptID).subscribe(r => {
       this.receiptSubject.next(r.name);
     });
     return this.receiptSubject;
   }
 
-  updateStatus(billing: any, status: Status): void {
+  goDetail(billing: any): void {
+    this.router.navigate(["/detail"], {
+      state: {
+        me: this.me,
+        billing: billing
+      }
+    });
+  }
+
+  updateStatus(event: Event, billing: any, status: Status): void {
+    event.stopPropagation();
     this.loadingSvc.present();
     this.firebase
       .updateStatus(status, billing.id, this.me.group, billing.addressID)
       .then(
         () => {
+          this.fetchCollection();
           this.loadingSvc.dismiss();
-          this.notificationSvc
-            .doneBillingToSlack(billing.sourceSlackID, this.me.displayName)
-            .subscribe(
-              d => {
-                console.log("post");
-              },
-              err => {
-                console.log(err);
-              }
-            );
+          // this.notificationSvc
+          //   .doneBillingToSlack(billing.sourceSlackID, this.me.displayName)
+          //   .subscribe(
+          //     d => {
+          //       console.log("post");
+          //     },
+          //     err => {
+          //       console.log(err);
+          //     }
+          //   );
         },
         err => {
           console.log(err);

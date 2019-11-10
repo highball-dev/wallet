@@ -11,7 +11,8 @@ const routes: Routes = [
   },
   { path: "login", loadChildren: "./login/login.module#LoginPageModule" },
   { path: 'dutch', loadChildren: './dutch/dutch.module#DutchPageModule' },
-  { path: 'tutorial', loadChildren: './tutorial/tutorial.module#TutorialPageModule' }
+  { path: 'tutorial', loadChildren: './tutorial/tutorial.module#TutorialPageModule' },
+  { path: 'detail', loadChildren: './detail/detail.module#DetailPageModule' }
 ];
 @NgModule({
   imports: [

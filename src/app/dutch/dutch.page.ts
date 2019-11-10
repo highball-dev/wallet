@@ -66,8 +66,8 @@ export class DutchPage implements OnInit {
         .createBilling(
           this.receiptID,
           member.group,
-          member.uid,
           this.sourceID,
+          member.uid,
           this.sourceSlackID,
           this.billingAmount
         )

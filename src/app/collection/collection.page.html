@@ -10,7 +10,7 @@
       Recent Conversations
     </ion-list-header>
     <div *ngFor="let billing of billings">
-      <ion-item>
+      <ion-item (click)="goDetail(billing)">
         <ion-avatar slot="start">
           <img [src]="getImgUrl(billing.sourceID) | async" />
         </ion-avatar>
@@ -21,7 +21,7 @@
         </ion-label>
         <ion-button
           *ngIf="billing.status != 'Paid'"
-          (click)="updateStatus(billing, status.Paid)"
+          (click)="updateStatus($event, billing, status.Paid)"
           >PAID</ion-button
         >
       </ion-item>
