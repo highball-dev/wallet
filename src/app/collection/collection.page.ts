@@ -109,21 +109,21 @@ export class CollectionPage implements OnInit {
     event.stopPropagation();
     this.loadingSvc.present();
     this.firebase
-      .updateStatus(status, billing.id, this.me.group, billing.addressID)
+      .updateStatus(status, billing.id, this.me.group, billing.receiptID)
       .then(
         () => {
           this.fetchCollection();
           this.loadingSvc.dismiss();
-          // this.notificationSvc
-          //   .doneBillingToSlack(billing.sourceSlackID, this.me.displayName)
-          //   .subscribe(
-          //     d => {
-          //       console.log("post");
-          //     },
-          //     err => {
-          //       console.log(err);
-          //     }
-          //   );
+          this.notificationSvc
+            .doneBillingToSlack(billing.sourceSlackID, this.me.displayName)
+            .subscribe(
+              d => {
+                console.log("post");
+              },
+              err => {
+                console.log(err);
+              }
+            );
         },
         err => {
           console.log(err);

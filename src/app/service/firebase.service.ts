@@ -142,12 +142,12 @@ export class FirebaseService {
     status: Status,
     billingID: string,
     group: string,
-    addressID: string
+    receiptID: string
   ): Promise<any> {
     const itemRef = this.angularfireDatabase.object(
-      "billing/" + group + "/" + addressID + "/" + billingID
+      "billing/" + group + "/" + receiptID + "/" + billingID
     );
-    console.log("billing/" + group + "/" + addressID + "/" + billingID);
+    console.log("billing/" + group + "/" + receiptID + "/" + billingID);
     return itemRef.update({
       status: status
     });
