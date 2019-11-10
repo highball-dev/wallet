@@ -16,8 +16,7 @@ import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { AngularFireStorageModule } from "@angular/fire/storage";
 import { Camera } from "@ionic-native/camera/ngx";
-// import { DutchPage } from "./dutch/dutch.page";
-// import { TutorialPage } from "./tutorial/tutorial.page";
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,6 +29,7 @@ import { Camera } from "@ionic-native/camera/ngx";
     AngularFireDatabaseModule,
     AngularFireStorageModule,
     AppRoutingModule,
+    HttpClientModule,
     FormsModule
   ],
   providers: [

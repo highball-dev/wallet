@@ -96,13 +96,6 @@ export class AuthService {
     return this.afAuth.user;
   }
 
-  getUser(uid: string): Observable<User> {
-    const userRef: AngularFirestoreDocument<User> = this.afStore.doc(
-      `users/${uid}`
-    );
-    return userRef.valueChanges();
-  }
-
   getGroups(): Observable<any> {
     const groupRefs: AngularFirestoreCollection<any> = this.afStore.collection(
       `groups`

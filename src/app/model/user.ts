@@ -5,4 +5,5 @@ export interface User {
   photoURL?: string;
   profile?: string;
   group?: string;
+  slackID?: string;
 }

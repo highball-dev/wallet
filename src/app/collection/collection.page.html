@@ -15,9 +15,15 @@
           <img [src]="getImgUrl(billing.sourceID) | async" />
         </ion-avatar>
         <ion-label>
+          <p [ngClass]="billing.status">{{ billing.status }}</p>
           <h3>請求額：{{ billing.price }}</h3>
           <p>請求元：{{ getSourceName(billing.sourceID) | async }}</p>
         </ion-label>
+        <ion-button
+          *ngIf="billing.status != 'Paid'"
+          (click)="updateStatus(billing, status.Paid)"
+          >PAID</ion-button
+        >
       </ion-item>
     </div>
   </ion-list>

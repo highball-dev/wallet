@@ -18,6 +18,7 @@ import { AuthService } from "../service/auth.service";
 import { User } from "../model/user";
 import { Router } from "@angular/router";
 import { TutorialPage } from "../tutorial/tutorial.page";
+import { UserService } from "../service/user.service";
 
 @Component({
   selector: "app-account",
@@ -45,11 +46,12 @@ export class AccountPage {
     public alertCtrl: AlertController,
     public loadingCtrl: LoadingController,
     public modalController: ModalController,
+    public userSvc: UserService,
     private router: Router
   ) {
     // FIXME:
     this.auth.getAfUser().subscribe(afUser => {
-      this.auth.getUser(afUser.uid).subscribe(user => {
+      this.userSvc.getUser(afUser.uid).subscribe(user => {
         this.me = {
           uid: user.uid,
           email: user.email,
@@ -101,6 +103,8 @@ export class AccountPage {
     this.firebase
       .createReceipt(
         this.pushId,
+        this.me.uid,
+        this.me.slackID,
         this.me.group,
         this.name,
         this.description,
@@ -126,6 +130,7 @@ export class AccountPage {
       componentProps: {
         receiptID: this.pushId,
         sourceID: this.me.uid,
+        sourceSlackID: this.me.slackID,
         group: this.me.group,
         title: this.name,
         description: this.description

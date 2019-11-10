@@ -5,6 +5,7 @@ import {
   AngularFireUploadTask,
   AngularFireStorageReference
 } from "@angular/fire/storage";
+import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Status } from "../enum/status.enum";
 import { User } from "../model/user";
@@ -13,6 +14,8 @@ export interface Receipt {
   id: string;
   name: string;
   description: string;
+  sourceID: string;
+  sourceSlackID: string;
   status: Status;
   image?: string;
 }
@@ -24,6 +27,7 @@ export interface Billing {
   sourceID: string;
   price: number;
   status: Status;
+  sourceSlackID: string;
 }
 
 @Injectable({
@@ -51,6 +55,8 @@ export class FirebaseService {
 
   public createReceipt(
     id: string,
+    sourceID: string,
+    sourceSlcakID: string,
     group: string,
     name: string,
     description: string,
@@ -66,6 +72,8 @@ export class FirebaseService {
       id: id,
       name: name,
       description: description,
+      sourceID: sourceID,
+      sourceSlackID: sourceSlcakID,
       status: Status.Waiting,
       image: imageURL ? imageURL : ""
     };
@@ -99,6 +107,7 @@ export class FirebaseService {
     group: string,
     addressID: string,
     sourceID: string,
+    sourceSlackID: string,
     price: number
   ): Promise<any> {
     const billingID: string = this.angularfireDatabase.createPushId();
@@ -111,8 +120,24 @@ export class FirebaseService {
       addressID: addressID,
       sourceID: sourceID,
       price: price,
+      sourceSlackID: sourceSlackID,
       status: Status.Waiting
     };
     return itemRef.set(targetObject);
+  }
+
+  public updateStatus(
+    status: Status,
+    billingID: string,
+    group: string,
+    addressID: string
+  ): Promise<any> {
+    const itemRef = this.angularfireDatabase.object(
+      "billing/" + group + "/" + addressID + "/" + billingID
+    );
+    console.log("billing/" + group + "/" + addressID + "/" + billingID);
+    return itemRef.update({
+      status: status
+    });
   }
 }

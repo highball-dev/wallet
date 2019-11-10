@@ -4,6 +4,7 @@ import { User } from "../model/user";
 import { ModalController, AlertController } from "@ionic/angular";
 import { LoadingService } from "../service/loading.service";
 import { Router } from "@angular/router";
+import { UserService } from "../service/user.service";
 
 @Component({
   selector: "app-setting",
@@ -15,10 +16,13 @@ export class SettingPage implements OnInit {
   me: User;
   displayName: string;
   selectedGroup: string;
+  slackID: string;
+
   constructor(
     public auth: AuthService,
     public router: Router,
     public loadingSvc: LoadingService,
+    public userSvc: UserService,
     public modalCtrl: ModalController,
     public alertCtrl: AlertController
   ) {
@@ -28,7 +32,7 @@ export class SettingPage implements OnInit {
 
     // FIXME
     this.auth.getAfUser().subscribe(afUser => {
-      this.auth.getUser(afUser.uid).subscribe(user => {
+      this.userSvc.getUser(afUser.uid).subscribe(user => {
         this.me = {
           uid: user.uid,
           email: user.email,
@@ -57,7 +61,8 @@ export class SettingPage implements OnInit {
     this.auth.updateUserData({
       uid: this.me.uid,
       group: this.selectedGroup,
-      displayName: this.displayName
+      displayName: this.displayName,
+      slackID: this.slackID
     });
     this.loadingSvc.dismiss();
   }

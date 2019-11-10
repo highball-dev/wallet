@@ -4,6 +4,7 @@ import { User } from "../model/user";
 import { FirebaseService } from "../service/firebase.service";
 import { AuthService } from "../service/auth.service";
 import { Subject } from "rxjs";
+import { UserService } from "../service/user.service";
 
 @Component({
   selector: "app-dutch",
@@ -20,12 +21,14 @@ export class DutchPage implements OnInit {
   price: number;
   dutchMembers: User[];
   billingAmount: number = 0;
+  sourceSlackID: string;
   imgUrlSubject: Subject<string>;
 
   constructor(
     public auth: AuthService,
     public modalCtrl: ModalController,
-    public firebase: FirebaseService
+    public firebase: FirebaseService,
+    public userSvc: UserService
   ) {}
 
   ngOnInit() {
@@ -51,7 +54,7 @@ export class DutchPage implements OnInit {
   }
 
   getImgUrl(sourceID: string): Subject<string> {
-    this.auth.getUser(sourceID).subscribe(u => {
+    this.userSvc.getUser(sourceID).subscribe(u => {
       this.imgUrlSubject.next(u.photoURL);
     });
     return this.imgUrlSubject;
@@ -65,6 +68,7 @@ export class DutchPage implements OnInit {
           member.group,
           member.uid,
           this.sourceID,
+          this.sourceSlackID,
           this.billingAmount
         )
         .then(() => {
